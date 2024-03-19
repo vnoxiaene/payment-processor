@@ -1,0 +1,32 @@
+cloud:
+    aws:
+        stack:
+            auto: false
+        region:
+            static: us-east-1
+        credentials:
+            access-key: ANUJDEKAVADIYAEXAMPLE
+            secret-key: 2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY
+        end-point:
+            uri: http://localhost:4566
+spring:
+    application:
+        name: payment-processor
+    datasource:
+        password: mysecretpassword
+        url: jdbc:postgresql://localhost:5432/payment_processor
+        username: postgres
+    jpa:
+        hibernate:
+            ddl-auto: create
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+sqs:
+    queue:
+        excess:
+            payments: http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/vnoxiaene_pagamentos_parciais
+        partial:
+            payments: http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/vnoxiaene_pagamentos_parciais
+        total:
+            payments: http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/vnoxiaene_pagamentos_totais

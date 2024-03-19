@@ -45,14 +45,15 @@ public class PaymentServiceImpl implements PaymentService {
     }
     // construir response e enviar
     Set<PaymentResponseVO> paymentResponseVOS = new HashSet<>();
-    sellerPaymentsRequestVO.getPayments().forEach(s -> {
-      if (amountExcess(s)) {
-        processExcessPayment(s, paymentResponseVOS);
+    sellerPaymentsRequestVO.getPayments().forEach(payment -> {
+      if (amountExcess(payment)) {
+        processExcessPayment(payment, paymentResponseVOS);
       }
-      if (amountFull(s)) {
-        processFullPayment(s, paymentResponseVOS);
-      } else {
-        processPartialPayment(s, paymentResponseVOS);
+      if (amountFull(payment)) {
+        processFullPayment(payment, paymentResponseVOS);
+      }
+      if (amountPartial(payment)){
+        processPartialPayment(payment, paymentResponseVOS);
       }
     });
     return SellerPaymentsResponseVO.builder().payments(paymentResponseVOS).sellerCode(sellerCode)
@@ -98,7 +99,10 @@ public class PaymentServiceImpl implements PaymentService {
     return s.getAmountPaid()
         .compareTo(paymentRepository.findByBillingCode(s.getBillingCode()).get().getAmount()) == 0;
   }
-
+  private boolean amountPartial(PaymentRequestsVO s) {
+    return s.getAmountPaid()
+        .compareTo(paymentRepository.findByBillingCode(s.getBillingCode()).get().getAmount()) < 0;
+  }
   private boolean amountExcess(PaymentRequestsVO s) {
     return s.getAmountPaid()
         .compareTo(paymentRepository.findByBillingCode(s.getBillingCode()).get().getAmount()) > 0;
